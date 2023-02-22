@@ -639,7 +639,7 @@ def SwinS(pretrained=True):
 def SwinB(pretrained=True):
     model = SwinTransformer(embed_dim=128, depths=[2, 2, 18, 2], num_heads=[4, 8, 16, 32], window_size=12)
     if pretrained is True:
-        model.load_state_dict(torch.load('data/backbone_ckpt/swin_base_rl.pth', map_location='cpu'), strict=False)
+        model.load_state_dict(torch.load('data/backbone_ckpt/swinB_rl.pth', map_location='cpu'), strict=False)
         
     return model
 
