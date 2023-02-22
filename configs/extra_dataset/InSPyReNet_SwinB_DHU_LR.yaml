@@ -9,7 +9,7 @@ Train:
     Dataset:
         type: "RGB_Dataset"
         root: "data/Train_Dataset"
-        sets: ['DUTS-TR', 'HRSOD-TR', 'UHRSD-TR']
+        sets: ['CUSTOM']
         transforms:
             static_resize: 
                 size: [384, 384]
