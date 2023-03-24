@@ -48,7 +48,7 @@ def get_format(source):
 def inference(opt, args):
     model = eval(opt.Model.name)(**opt.Model)
     model.load_state_dict(torch.load(os.path.join(
-        opt.Test.Checkpoint.checkpoint_dir, 'latest.pth'), map_location=torch.device('cpu')), strict=True)
+        opt.Test.Checkpoint.checkpoint_dir, 'latest12.pth'), map_location=torch.device('cpu')), strict=True)
     
     if args.gpu is True:
         model = model.cuda()
@@ -110,7 +110,7 @@ def inference(opt, args):
 
         with torch.no_grad():
             if args.jit is True:
-                out = model(sample['image'])
+                out = model(sample)
             else:
                 out = model(sample)
                 

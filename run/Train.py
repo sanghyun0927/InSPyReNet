@@ -14,7 +14,7 @@ from torch.optim import Adam, SGD
 from torch.utils.data.distributed import DistributedSampler
 from torch.cuda.amp.grad_scaler import GradScaler
 from torch.cuda.amp.autocast_mode import autocast
-
+from torchsummary import summary
 filepath = os.path.split(os.path.abspath(__file__))[0]
 repopath = os.path.split(filepath)[0]
 sys.path.append(repopath)
@@ -50,7 +50,7 @@ def train(opt, args):
                               pin_memory=opt.Train.Dataloader.pin_memory,
                               drop_last=True)
 
-    model_ckpt = torch.load('./data/pretrained_ckpt/ckpt_DHU.pth', map_location='cpu')
+    model_ckpt = torch.load('./data/pretrained_ckpt/ckpt_base.pth', map_location='cpu')
     state_ckpt = None
 
     if args.resume is True:
@@ -104,6 +104,7 @@ def train(opt, args):
     if state_ckpt is not None:
         scheduler.load_state_dict(state_ckpt['scheduler'])
 
+    print(model)
     model.train()
 
     start = 1
