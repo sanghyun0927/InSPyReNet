@@ -54,12 +54,12 @@ def train(opt, args):
     state_ckpt = None
 
     if args.resume is True:
-        if os.path.isfile(os.path.join(opt.Train.Checkpoint.checkpoint_dir, 'latest.pth')):
-            model_ckpt = torch.load(os.path.join(opt.Train.Checkpoint.checkpoint_dir, 'latest.pth'), map_location='cpu')
+        if os.path.isfile(os.path.join(opt.Train.Checkpoint.colab_dir, 'latest.pth')):
+            model_ckpt = torch.load(os.path.join(opt.Train.Checkpoint.colab_dir, 'latest.pth'), map_location='cpu')
             if args.local_rank <= 0:
                 print('Resume from checkpoint')
-        if os.path.isfile(os.path.join(opt.Train.Checkpoint.checkpoint_dir, 'state.pth')):
-            state_ckpt = torch.load(os.path.join(opt.Train.Checkpoint.checkpoint_dir, 'state.pth'), map_location='cpu')
+        if os.path.isfile(os.path.join(opt.Train.Checkpoint.colab_dir, 'state.pth')):
+            state_ckpt = torch.load(os.path.join(opt.Train.Checkpoint.colab_dir, 'state.pth'), map_location='cpu')
             if args.local_rank <= 0:
                 print('Resume from state')
 
@@ -104,7 +104,6 @@ def train(opt, args):
     if state_ckpt is not None:
         scheduler.load_state_dict(state_ckpt['scheduler'])
 
-    print(model)
     model.train()
 
     start = 1
@@ -147,9 +146,9 @@ def train(opt, args):
                 step_iter.set_postfix({'loss': out['loss'].item()})
 
         if args.local_rank <= 0:
-            os.makedirs(opt.Train.Checkpoint.checkpoint_dir, exist_ok=True)
+            os.makedirs(opt.Train.Checkpoint.colab_dir, exist_ok=True)
             os.makedirs(os.path.join(
-                opt.Train.Checkpoint.checkpoint_dir, 'debug'), exist_ok=True)
+                opt.Train.Checkpoint.colab_dir, 'debug'), exist_ok=True)
             if epoch % opt.Train.Checkpoint.checkpoint_epoch == 0:
                 if args.device_num > 1:
                     model_ckpt = model.module.state_dict()
@@ -160,12 +159,12 @@ def train(opt, args):
                               'optimizer': optimizer.state_dict(),
                               'scheduler': scheduler.state_dict()}
 
-                torch.save(model_ckpt, '../drive/MyDrive/InSPy_models/' + f'latest{epoch}.pth')
-                torch.save(state_ckpt, '../drive/MyDrive/InSPy_models/' + f'state{epoch}.pth')
+                torch.save(model_ckpt, '../drive/MyDrive/InSPyRe_models/' + f'latest{epoch}.pth')
+                torch.save(state_ckpt, '../drive/MyDrive/InSPyRe_models/' + f'state{epoch}.pth')
 
             if args.debug is True:
                 debout = debug_tile(sum([out[k] for k in opt.Train.Debug.keys], []), activation=torch.sigmoid)
-                cv2.imwrite(os.path.join(opt.Train.Checkpoint.checkpoint_dir, 'debug', str(epoch) + '.png'), debout)
+                cv2.imwrite(os.path.join(opt.Train.Checkpoint.colab_dir, 'debug', str(epoch) + '.png'), debout)
 
     if args.local_rank <= 0:
         torch.save(model.module.state_dict() if args.device_num > 1 else model.state_dict(),
