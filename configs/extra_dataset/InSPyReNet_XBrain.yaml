@@ -46,6 +46,7 @@ Train:
     Checkpoint:
         checkpoint_epoch: 1
         checkpoint_dir: "snapshots/Plus_Ultra"
+        colob_dir: "content/drive/MyDrive/InSPyRe_models"
     Debug:
         keys: ['saliency', 'laplacian']
     

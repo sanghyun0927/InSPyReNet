@@ -138,3 +138,5 @@ Samples/*
 temp/*
 .idea
 .vscode
+images/*/*
+images/*
