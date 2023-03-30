@@ -160,8 +160,8 @@ def train(opt, args):
                               'optimizer': optimizer.state_dict(),
                               'scheduler': scheduler.state_dict()}
 
-                torch.save(model_ckpt, '../drive/MyDrive/InSPyRe_models/' + f'latest{epoch}.pth')
-                torch.save(state_ckpt, '../drive/MyDrive/InSPyRe_models/' + f'state{epoch}.pth')
+                torch.save(model_ckpt, '/content/drive/MyDrive/InSPyRe_models/' + f'latest{epoch}.pth')
+                torch.save(state_ckpt, '/content/drive/MyDrive/InSPyRe_models/' + f'state{epoch}.pth')
 
             if args.debug is True:
                 debout = debug_tile(sum([out[k] for k in opt.Train.Debug.keys], []), activation=torch.sigmoid)

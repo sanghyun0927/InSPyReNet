@@ -45,7 +45,7 @@ Train:
         warmup_iteration: 12000
     Checkpoint:
         checkpoint_epoch: 1
-        checkpoint_dir: "content/drive/MyDrive/InSPyRe_models"
+        checkpoint_dir: "/content/drive/MyDrive/InSPyRe_models"
     Debug:
         keys: ['saliency', 'laplacian']
     
