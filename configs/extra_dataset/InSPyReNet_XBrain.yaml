@@ -53,7 +53,7 @@ Test:
     Dataset:
         type: "RGB_Dataset"
         root: "data/Test_Dataset"
-        sets:  ['DUTS-TE', 'DUT-OMRON', 'ECSSD', 'HKU-IS', 'PASCAL-S', 'DAVIS-S', 'HRSOD-TE', 'UHRSD-TE']
+        sets:  ['CUSTOM']
         transforms:
             # static_resize: 
             #     size: [1024, 1024]
@@ -74,5 +74,5 @@ Eval:
     gt_root: "data/Test_Dataset"
     pred_root: "snapshots/Plus_Ultra"
     result_path: "results"
-    datasets: ['DUTS-TE', 'DUT-OMRON', 'ECSSD', 'HKU-IS', 'PASCAL-S', 'DAVIS-S', 'HRSOD-TE', 'UHRSD-TE']
+    datasets: ['CUSTOM']
     metrics: ['Sm', 'mae', 'adpEm', 'maxEm', 'avgEm', 'adpFm', 'maxFm', 'avgFm', 'wFm', 'mBA']
