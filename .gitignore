@@ -136,6 +136,7 @@ snapshots
 snapshots/*
 Samples/*
 temp/*
+checkpoints/*
+onnx/*
 .idea
 .vscode
-charancha/*
