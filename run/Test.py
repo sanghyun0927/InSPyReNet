@@ -2,11 +2,13 @@ import os
 import sys
 import tqdm
 import torch
-
+import onnxruntime as ort
 import numpy as np
 
 from PIL import Image
 from torch.utils.data.dataloader import DataLoader
+
+from cargen.models import get_segment_session
 
 filepath = os.path.split(os.path.abspath(__file__))[0]
 repopath = os.path.split(filepath)[0]

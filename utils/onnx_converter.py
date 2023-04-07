@@ -3,7 +3,6 @@ import sys
 import warnings
 import torchvision.transforms as transforms
 
-
 filepath = os.path.abspath(__file__)
 repopath = os.path.split(filepath)[0]
 sys.path.append(repopath)
@@ -13,32 +12,7 @@ from transparent_background import Remover
 
 warnings.filterwarnings("ignore")
 
-CONFIG = {
-'base':     {'url': "https://drive.google.com/file/d/13oBl5MTVcWER3YU4fSxW3ATlVfueFQPY/view?usp=share_link",
-             'md5': "d692e3dd5fa1b9658949d452bebf1cda",
-             'base_size': [1024, 1024],
-             'threshold': None,
-             'ckpt_name': "ckpt_base.pth",
-             'resize': dynamic_resize(L=1280)},
-'fast':     {'url': "https://drive.google.com/file/d/1iRX-0MVbUjvAVns5MtVdng6CQlGOIo3m/view?usp=share_link",
-             'md5': "9efdbfbcc49b79ef0f7891c83d2fd52f",
-             'base_size': [384, 384],
-             'threshold': 512,
-             'ckpt_name': "ckpt_fast.pth",
-             'resize': static_resize(size=[384, 384])}
-}
-
-meta = CONFIG['base']
-# ckpt = './checkpoints/ckpt_base.pth'
-#
-# ckpt_dir, ckpt_name = os.path.split(os.path.abspath(ckpt))
-#
-# model = InSPyReNet_SwinB(depth=64, pretrained=False, **meta)
-# model.eval()
-# model.load_state_dict(torch.load(os.path.join(ckpt_dir, ckpt_name), map_location='cpu'))
-# # model = model.to(device)
-
-transform = transforms.Compose([meta['resize'],
+transform = transforms.Compose([dynamic_resize(L=1280),
                                 tonumpy(),
                                 normalize(mean=[0.485, 0.456, 0.406],
                                           std=[0.229, 0.224, 0.225]),
