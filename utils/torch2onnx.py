@@ -2,11 +2,13 @@ import os
 import sys
 import io
 import warnings
+import time
 
 import numpy as np
 import torch
 import torchvision.transforms as transforms
-import onnx
+import onnxruntime as ort
+from rembg.session_base import BaseSession
 from PIL import Image
 
 from transparent_background import Remover
@@ -17,6 +19,8 @@ from transparent_background.utils import (
     totensor,
 )
 
+from cargen.utils.simple_session import SimpleSession
+
 warnings.filterwarnings("ignore")
 
 # Set up the file and repository paths
@@ -25,7 +29,7 @@ repo_path = os.path.split(file_path)[0]
 sys.path.append(repo_path)
 
 
-def get_onnx_model(ckpt_dir: str, epoch:str):
+def get_ort_session(opt, epoch: str) -> BaseSession:
     # Define the image transformation pipeline
     transform = transforms.Compose([
         dynamic_resize(L=1280),
@@ -43,7 +47,7 @@ def get_onnx_model(ckpt_dir: str, epoch:str):
     x = x.to('cpu')
 
     # Initialize the Remover model with custom settings
-    ckpt_path = os.path.join(ckpt_dir, f"latest{epoch}.pth")
+    ckpt_path = os.path.join(opt.Test.Checkpoint.checkpoint_dir, f"latest{epoch}.pth")
     remover = Remover(fast=False, jit=False, device='cpu', ckpt=ckpt_path)
     model = remover.model
 
@@ -64,8 +68,18 @@ def get_onnx_model(ckpt_dir: str, epoch:str):
         }
     )
 
-    # Load the ONNX model as an object
+    # Load the ONNX model using ONNX Runtime
     onnx_model_io.seek(0)  # Reset the buffer position to the beginning
-    onnx_model = onnx.load(onnx_model_io)
+    sess_opts = ort.SessionOptions()
+    model_name = "InSPyReNet"
 
-    return onnx_model
+    if opt.omp_num_threads:
+        sess_opts.inter_op_num_threads = opt.omp_num_threads
+
+    inner_session = ort.InferenceSession(
+        onnx_model_io.read(),
+        providers=ort.get_available_providers(),
+        sess_options=sess_opts,
+    )
+
+    return SimpleSession(model_name, inner_session)

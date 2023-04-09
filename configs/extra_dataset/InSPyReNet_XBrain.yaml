@@ -71,11 +71,11 @@ Test:
         num_workers: 8
         pin_memory: True
     Checkpoint:
-        checkpoint_dir: "snapshots/Plus_Ultra"
+        checkpoint_dir: "snapshots/XBrain"
 
 Eval:
     gt_root: "data/Test_Dataset"
-    pred_root: "snapshots/Plus_Ultra"
+    pred_root: "snapshots/XBrain"
     result_path: "results"
     datasets: ['CUSTOM']
     metrics: ['Sm', 'mae', 'adpEm', 'maxEm', 'avgEm', 'adpFm', 'maxFm', 'avgFm', 'wFm', 'mBA']
