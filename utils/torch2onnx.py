@@ -29,7 +29,7 @@ repo_path = os.path.split(file_path)[0]
 sys.path.append(repo_path)
 
 
-def get_ort_session(opt, epoch: str) -> BaseSession:
+def get_ort_session(opt, epoch: int) -> BaseSession:
     # Define the image transformation pipeline
     transform = transforms.Compose([
         dynamic_resize(L=1280),

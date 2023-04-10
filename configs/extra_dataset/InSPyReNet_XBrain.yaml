@@ -78,7 +78,7 @@ Eval:
     pred_root: "snapshots/XBrain"
     result_path: "results"
     datasets: ['CUSTOM']
-    metrics: ['Sm', 'mae', 'adpEm', 'maxEm', 'avgEm', 'adpFm', 'maxFm', 'avgFm', 'wFm', 'mBA']
+    metrics: ['Sm', 'mae', 'avgIou', 'avgBIou', 'avgTIou', 'mBA']
 
 ###################################
 # DEFAULT SETTING
