@@ -135,5 +135,5 @@ def evaluate(opt, args, epoch):
 if __name__ == "__main__":
     args = parse_args()
     opt = load_config(args.config)
-    for i in range(5, 26, 5):
+    for i in range(0, 26, 5):
         evaluate(opt, args, i)
