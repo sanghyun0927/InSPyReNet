@@ -11,8 +11,8 @@ from data.dataloader import *
 from cargen.utils.u2net_bg import remove
 
 
-def test(opt, epoch):
-    session = get_ort_session(opt, epoch)
+def test(opt):
+    session = get_ort_session(opt, "5")
 
     set = opt.Test.Dataset.sets[0]
     dataset_dir = os.path.join(opt.Test.Dataset.root, set)
@@ -21,7 +21,7 @@ def test(opt, epoch):
 
     for image_name in tqdm.tqdm(os.listdir(image_dir)):
         image_path = os.path.join(image_dir, image_name)
-        save_path = os.path.join(opt.Test.Checkpoint.checkpoint_dir, f"{set}_epoch{epoch}")
+        save_path = os.path.join(opt.Test.Checkpoint.checkpoint_dir, set)
 
         image = Image.open(image_path)
         mask = remove(image, session, post_process_mask=True, only_mask=True, size=1024)
@@ -32,5 +32,4 @@ def test(opt, epoch):
 if __name__ == "__main__":
     args = parse_args()
     opt = load_config(args.config)
-    for i in [10, 20, 25]:
-        test(opt, i)
+    test(opt)

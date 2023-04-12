@@ -16,7 +16,7 @@ from utils.misc import *
 
 BETA = 1.0
 
-def evaluate(opt, args, epoch):
+def evaluate(opt, args):
     if os.path.isdir(opt.Eval.result_path) is False:
         os.makedirs(opt.Eval.result_path)
         
@@ -32,7 +32,7 @@ def evaluate(opt, args, epoch):
     results = []
 
     for dataset in datasets:
-        pred_root = os.path.join(opt.Eval.pred_root, f"{dataset}_epoch{epoch}")
+        pred_root = os.path.join(opt.Eval.pred_root, dataset)
         gt_root = os.path.join(opt.Eval.gt_root, dataset, 'masks')
 
         preds = os.listdir(pred_root)
@@ -117,7 +117,7 @@ def evaluate(opt, args, epoch):
         for metric in opt.Eval.metrics:
             out[metric] = eval(metric)
 
-        pkl = os.path.join(opt.Eval.result_path, f"result_{dataset}{epoch}.pkl")
+        pkl = os.path.join(opt.Eval.result_path, 'result_' + dataset + '.pkl')
         if os.path.isfile(pkl) is True:
             result = pd.read_pickle(pkl)
             result.loc[method] = out
@@ -125,7 +125,7 @@ def evaluate(opt, args, epoch):
         else:
             result = pd.DataFrame(data=out, index=[method])
             result.to_pickle(pkl)
-        result.to_csv(os.path.join(opt.Eval.result_path, f"result_{dataset}{epoch}.csv"))
+        result.to_csv(os.path.join(opt.Eval.result_path, 'result_' + dataset + '.csv'))
         results.append(result)
         
     if args.verbose is True:
@@ -135,5 +135,4 @@ def evaluate(opt, args, epoch):
 if __name__ == "__main__":
     args = parse_args()
     opt = load_config(args.config)
-    for i in range(5, 26, 5):
-        evaluate(opt, args, i)
+    evaluate(opt, args)
