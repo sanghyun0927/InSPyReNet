@@ -71,14 +71,14 @@ Test:
         num_workers: 8
         pin_memory: True
     Checkpoint:
-        checkpoint_dir: "snapshots/XBrain"
+        checkpoint_dir: "snapshots/XBrain/v1"
 
 Eval:
     gt_root: "data/Test_Dataset"
-    pred_root: "snapshots/XBrain"
+    pred_root: "snapshots/XBrain/v1"
     result_path: "results"
     datasets: ['CUSTOM']
-    metrics: ['Sm', 'mae', 'adpEm', 'maxEm', 'avgEm', 'adpFm', 'maxFm', 'avgFm', 'wFm', 'mBA']
+    metrics: ['Sm', 'mae', 'avgIou', 'avgBIou', 'avgTIou', 'wFm', 'mBA']
 
 ###################################
 # DEFAULT SETTING
