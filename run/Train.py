@@ -104,7 +104,7 @@ def train(opt, args):
     if state_ckpt is not None:
         scheduler.load_state_dict(state_ckpt['scheduler'])
 
-    # model.backbone.frozen_stages = 4
+    model.backbone.frozen_stages = 2
     model.train()
 
     start = 1
