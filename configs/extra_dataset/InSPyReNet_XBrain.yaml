@@ -37,14 +37,14 @@ Train:
         pin_memory: False
     Optimizer:
         type: "Adam"
-        lr: 5.0e-06
+        lr: 1.0e-06
         weight_decay: 0.0
         mixed_precision: False
     Scheduler:
         type: "PolyLr"
         epoch: 30
         gamma: 0.9
-        minimum_lr: 1.0e-07
+        minimum_lr: 1.0e-08
         warmup_iteration: 12000
     Checkpoint:
         checkpoint_epoch: 1
