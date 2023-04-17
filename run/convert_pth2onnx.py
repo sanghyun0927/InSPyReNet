@@ -2,11 +2,14 @@ import os
 import sys
 import warnings
 from argparse import ArgumentParser
+from typing import Tuple, Dict, List
+
+import onnxruntime
 
 import numpy as np
 import torch
 import torchvision.transforms as transforms
-from PIL import Image
+from PIL import Image, ImageOps
 
 from transparent_background import Remover
 from transparent_background.utils import (
@@ -27,6 +30,11 @@ sys.path.append(repo_path)
 
 
 def convert_to_onnx(opt, epoch: int, dummy_batch_size: int = 32):
+    print("")
+    print("convert_to_onnx")
+    print(f"\tepoch: {epoch}")
+    print(f"\tdummy_batch_size: {dummy_batch_size}")
+    print("")
     # Define the image transformation pipeline
     transform = transforms.Compose([
         dynamic_resize(L=1280),
@@ -45,7 +53,7 @@ def convert_to_onnx(opt, epoch: int, dummy_batch_size: int = 32):
 
     # Initialize the Remover model with custom settings
     ckpt_path = os.path.join(opt.Test.Checkpoint.checkpoint_dir, f"latest{epoch}.pth")
-    onnx_path = os.path.join(opt.onnx_model_root, f"InSPyReNet_XB_{epoch}.onnx")
+    onnx_path = os.path.join(opt.onnx_model_root, f"InSPyReNet_XB_{epoch}_batch{dummy_batch_size}.onnx")
     remover = Remover(fast=False, jit=False, device='cpu', ckpt=ckpt_path)
     model = remover.model
 
@@ -65,13 +73,18 @@ def convert_to_onnx(opt, epoch: int, dummy_batch_size: int = 32):
         }
     )
 
+    print(f"Save result - '{onnx_path}'")
+    return onnx_path
+
 
 if __name__ == "__main__":
     this_parser = ArgumentParser()
     this_parser.add_argument('--dummy-batch-size', type=int, default=1)
 
-    this_args, _ = this_parser.parse_known_args()
+    this_args, other_args = this_parser.parse_known_args()
+
+    sys.argv = [sys.argv[0]] + other_args
 
     args = parse_args()
     opt = load_config(args.config)
-    convert_to_onnx(opt, 25, dummy_batch_size=this_args.dummy_batch_size)
+    convert_to_onnx(opt, 10, dummy_batch_size=this_args.dummy_batch_size)
