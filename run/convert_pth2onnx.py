@@ -1,11 +1,15 @@
 import os
 import sys
 import warnings
+from argparse import ArgumentParser
+from typing import Tuple, Dict, List
+
+import onnxruntime
 
 import numpy as np
 import torch
 import torchvision.transforms as transforms
-from PIL import Image
+from PIL import Image, ImageOps
 
 from transparent_background import Remover
 from transparent_background.utils import (
@@ -25,7 +29,12 @@ repo_path = os.path.split(file_path)[0]
 sys.path.append(repo_path)
 
 
-def convert_to_onnx(opt, epoch: int):
+def convert_to_onnx(opt, epoch: int, dummy_batch_size: int = 32):
+    print("")
+    print("convert_to_onnx")
+    print(f"\tepoch: {epoch}")
+    print(f"\tdummy_batch_size: {dummy_batch_size}")
+    print("")
     # Define the image transformation pipeline
     transform = transforms.Compose([
         dynamic_resize(L=1280),
@@ -36,22 +45,22 @@ def convert_to_onnx(opt, epoch: int):
     ])
 
     # Create a sample image and apply the transformations
-    img_np = np.ones((1024, 1024, 3), dtype='uint8')
-    img = Image.fromarray(img_np)  # Read image
-    x = transform(img)
-    x = x.unsqueeze(0)
-    x = x.to('cpu')
+    img_np = np.ones((dummy_batch_size, 1024, 1024, 3), dtype='uint8')
+    img = torch.stack(
+        [transform(Image.fromarray(_img_np)) for _img_np in img_np]
+    )
+    dummy_input = img.to('cpu')
 
     # Initialize the Remover model with custom settings
     ckpt_path = os.path.join(opt.Test.Checkpoint.checkpoint_dir, f"latest{epoch}.pth")
-    onnx_path = os.path.join(opt.onnx_model_root, f"InSPyReNet_XB_{epoch}.onnx")
+    onnx_path = os.path.join(opt.onnx_model_root, f"InSPyReNet_XB_{epoch}_batch{dummy_batch_size}.onnx")
     remover = Remover(fast=False, jit=False, device='cpu', ckpt=ckpt_path)
     model = remover.model
 
     # Export the PyTorch model to ONNX file
     torch.onnx.export(
         model,  # Executable model
-        x,  # Model input (tuple or multiple input values are also possible)
+        dummy_input,  # Model input (tuple or multiple input values are also possible)
         onnx_path,  # onnx final path
         export_params=True,  # Whether to save the trained model weights in the model file
         opset_version=13,  # ONNX version to use when converting the model
@@ -64,7 +73,18 @@ def convert_to_onnx(opt, epoch: int):
         }
     )
 
+    print(f"Save result - '{onnx_path}'")
+    return onnx_path
+
+
 if __name__ == "__main__":
+    this_parser = ArgumentParser()
+    this_parser.add_argument('--dummy-batch-size', type=int, default=1)
+
+    this_args, other_args = this_parser.parse_known_args()
+
+    sys.argv = [sys.argv[0]] + other_args
+
     args = parse_args()
     opt = load_config(args.config)
-    convert_to_onnx(opt, 25)
+    convert_to_onnx(opt, 10, dummy_batch_size=this_args.dummy_batch_size)
