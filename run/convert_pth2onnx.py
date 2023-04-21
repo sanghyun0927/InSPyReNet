@@ -87,4 +87,4 @@ if __name__ == "__main__":
 
     args = parse_args()
     opt = load_config(args.config)
-    convert_to_onnx(opt, 10, dummy_batch_size=this_args.dummy_batch_size)
+    convert_to_onnx(opt, 1, dummy_batch_size=this_args.dummy_batch_size)
