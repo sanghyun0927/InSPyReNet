@@ -50,8 +50,8 @@ def train(opt, args):
                               pin_memory=opt.Train.Dataloader.pin_memory,
                               drop_last=True)
 
-    model_ckpt = torch.load('./data/pretrained_ckpt/ckpt_base.pth', map_location='cpu')
-    state_ckpt = None
+    model_ckpt = torch.load('./data/pretrained_ckpt/latest.pth', map_location='cpu')
+    state_ckpt = torch.load('./data/pretrained_ckpt/state.pth', map_location='cpu')
 
     if args.resume is True:
         if os.path.isfile(os.path.join(opt.Train.Checkpoint.checkpoint_dir, 'latest.pth')):
