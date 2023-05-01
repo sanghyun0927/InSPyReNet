@@ -135,6 +135,7 @@ results/*
 snapshots
 snapshots/*
 Samples/*
+images/*
 temp/*
 checkpoints/*
 onnx/*

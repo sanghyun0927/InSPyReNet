@@ -14,7 +14,7 @@ from torch.optim import Adam, SGD
 from torch.utils.data.distributed import DistributedSampler
 from torch.cuda.amp.grad_scaler import GradScaler
 from torch.cuda.amp.autocast_mode import autocast
-from torchsummary import summary
+
 filepath = os.path.split(os.path.abspath(__file__))[0]
 repopath = os.path.split(filepath)[0]
 sys.path.append(repopath)
