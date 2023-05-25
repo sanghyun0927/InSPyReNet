@@ -51,7 +51,7 @@ def train(opt, args):
                               drop_last=True)
 
     model_ckpt = torch.load('./data/pretrained_ckpt/latest.pth', map_location='cpu')
-    state_ckpt = torch.load('./data/pretrained_ckpt/state.pth', map_location='cpu')
+    state_ckpt = None
 
     if args.resume is True:
         if os.path.isfile(os.path.join(opt.Train.Checkpoint.checkpoint_dir, 'latest.pth')):
